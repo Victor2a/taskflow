@@ -3,13 +3,6 @@
 > Application web full-stack de gestion de projets avec tableau Kanban,
 > authentification JWT et gestion des équipes.
 
-## 🚀 Demo en ligne
-[Lien à ajouter après déploiement]
-
-**Compte de démonstration :**
-- Email : demo@taskflow.com
-- Mot de passe : Demo1234!
-
 ## ✨ Fonctionnalités
 - 🔐 Authentification sécurisée (JWT + Spring Security)
 - 📋 Gestion de projets avec membres et permissions
