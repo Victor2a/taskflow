@@ -1,0 +1,35 @@
+<div class="board-container">
+  <!-- Header -->
+  <div class="board-header">
+    <div class="breadcrumb">
+      <a routerLink="/dashboard">Tableau de bord</a> /
+    </div>
+    <div *ngIf="project" class="color-dot" [style.background]="project.color"></div>
+    <h1>{{ project?.name ?? 'Chargement...' }}</h1>
+    <span class="spacer"></span>
+
+    <button mat-stroked-button [routerLink]="['/projects', projectId, 'settings']" *ngIf="project">
+      <mat-icon>settings</mat-icon> Paramètres
+    </button>
+    <button mat-flat-button color="primary" (click)="openTaskDialog()" *ngIf="project">
+      <mat-icon>add</mat-icon> Nouvelle tâche
+    </button>
+  </div>
+
+  <!-- Loading skeleton -->
+  <div *ngIf="loading" class="columns-wrapper">
+    <div *ngFor="let _ of skeletons" class="skeleton-col skeleton"></div>
+  </div>
+
+  <!-- Kanban board -->
+  <div *ngIf="!loading" class="columns-wrapper">
+    <app-board-column
+      *ngFor="let col of columns"
+      [column]="col"
+      [connectedLists]="connectedLists"
+      (taskClick)="openTaskDialog($event)"
+      (addTask)="openTaskDialog(undefined, $event)"
+      (dropped)="onDrop($event)">
+    </app-board-column>
+  </div>
+</div>

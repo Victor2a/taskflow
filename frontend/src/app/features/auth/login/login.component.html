@@ -1,0 +1,44 @@
+<div class="auth-container">
+  <mat-card class="auth-card">
+    <mat-card-content>
+      <div class="logo">⚡ TaskFlow</div>
+      <p class="subtitle">Gérez vos projets avec efficacité</p>
+
+      <div class="demo-hint">
+        <strong>Compte démo :</strong> demo&#64;taskflow.com / Demo1234!
+        <button mat-button color="primary" style="font-size:0.8rem;height:28px;padding:0 8px;" (click)="fillDemo()">
+          Remplir
+        </button>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" formControlName="email" placeholder="demo@taskflow.com">
+          <mat-icon matPrefix style="color:var(--text-secondary)">email</mat-icon>
+          <mat-error *ngIf="form.get('email')?.hasError('required')">Email requis</mat-error>
+          <mat-error *ngIf="form.get('email')?.hasError('email')">Email invalide</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="margin-top:12px">
+          <mat-label>Mot de passe</mat-label>
+          <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
+          <mat-icon matPrefix style="color:var(--text-secondary)">lock</mat-icon>
+          <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
+            <mat-icon>{{ hidePassword ? 'visibility' : 'visibility_off' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="form.get('password')?.hasError('required')">Mot de passe requis</mat-error>
+        </mat-form-field>
+
+        <button mat-flat-button color="primary" class="submit-btn" type="submit" [disabled]="loading || form.invalid">
+          <mat-spinner *ngIf="loading" diameter="20" style="display:inline-block;margin-right:8px"></mat-spinner>
+          Se connecter
+        </button>
+      </form>
+
+      <p class="footer">
+        Pas encore de compte ? <a routerLink="/register">Créer un compte</a>
+      </p>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,36 @@
+# Backend
+backend/target/
+backend/.mvn/
+*.class
+*.jar
+!**/src/main/**
+!**/src/test/**
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+
+# Docker
+postgres_data/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+*.env.local
+
+# Claude Code
+.claude/
+.mcp.json
+CLAUDE.md
+PROMPT_CLAUDE_CODE_TASKFLOW.md
+.code-review-graph/

@@ -1,0 +1,31 @@
+<div class="column" [style.border-top-color]="column.color">
+  <div class="column-header">
+    <div class="column-title">
+      <span>{{ column.label }}</span>
+      <span class="task-count">{{ column.tasks.length }}</span>
+    </div>
+    <button mat-icon-button class="add-btn" (click)="addTask.emit(column.status)" [matTooltip]="'Ajouter une tâche'">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+
+  <div class="task-list">
+    <div
+      class="drop-zone"
+      [id]="listId"
+      cdkDropList
+      [cdkDropListData]="column.tasks"
+      [cdkDropListConnectedTo]="connectedLists"
+      (cdkDropListDropped)="dropped.emit($event)">
+
+      <div *ngIf="column.tasks.length === 0" class="empty-col">
+        Aucune tâche
+      </div>
+
+      <div *ngFor="let task of column.tasks" cdkDrag [cdkDragData]="task">
+        <app-task-card [task]="task" (cardClick)="taskClick.emit($event)"></app-task-card>
+        <div *cdkDragPlaceholder style="height:68px;background:rgba(99,102,241,0.1);border-radius:8px;margin-bottom:8px;border:2px dashed var(--primary);"></div>
+      </div>
+    </div>
+  </div>
+</div>

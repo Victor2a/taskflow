@@ -1,0 +1,24 @@
+<div class="task-card" (click)="cardClick.emit(task)">
+  <div class="task-title">{{ task.title }}</div>
+
+  <div class="task-meta">
+    <span
+      class="priority-badge"
+      [class.urgent-pulse]="task.priority === 'URGENT'"
+      [style.background]="task.priority | priorityColor"
+      [style.color]="'white'">
+      {{ priorityLabel }}
+    </span>
+
+    <div style="display:flex;align-items:center;gap:6px;margin-left:auto;">
+      <span *ngIf="task.dueDate" class="due-date" [class.overdue]="isOverdue">
+        <mat-icon>schedule</mat-icon>
+        {{ formattedDate }}
+      </span>
+
+      <div *ngIf="task.assignee" class="avatar" [matTooltip]="task.assignee.username">
+        {{ initials }}
+      </div>
+    </div>
+  </div>
+</div>

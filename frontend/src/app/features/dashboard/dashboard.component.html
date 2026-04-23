@@ -1,0 +1,90 @@
+<div class="dashboard">
+  <div class="header">
+    <div>
+      <h1>Bonjour, {{ authService.currentUser?.username ?? 'là' }} 👋</h1>
+      <p>Voici un aperçu de vos projets en cours</p>
+    </div>
+    <button mat-flat-button color="primary" (click)="showCreateForm = !showCreateForm">
+      <mat-icon>add</mat-icon> Nouveau projet
+    </button>
+  </div>
+
+  <!-- Create form panel -->
+  <mat-card *ngIf="showCreateForm" style="margin-bottom:24px;background:var(--bg-surface);border:1px solid var(--border);">
+    <mat-card-content style="padding:20px;">
+      <h3 style="margin-bottom:16px;">Nouveau projet</h3>
+      <form [formGroup]="createForm" (ngSubmit)="createProject()" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <mat-form-field appearance="outline">
+          <mat-label>Nom du projet *</mat-label>
+          <input matInput formControlName="name" placeholder="Mon super projet">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Description</mat-label>
+          <input matInput formControlName="description" placeholder="Courte description...">
+        </mat-form-field>
+        <div>
+          <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:8px;">Couleur</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <div *ngFor="let c of colors"
+              [style.background]="c"
+              [style.outline]="createForm.get('color')?.value === c ? '2px solid white' : 'none'"
+              style="width:28px;height:28px;border-radius:50%;cursor:pointer;outline-offset:2px;"
+              (click)="createForm.get('color')?.setValue(c)">
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:flex-end;justify-content:flex-end;">
+          <button mat-button type="button" (click)="showCreateForm = false">Annuler</button>
+          <button mat-flat-button color="primary" type="submit" [disabled]="createForm.invalid">Créer</button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Skeleton loaders -->
+  <div *ngIf="loading" class="projects-grid">
+    <div *ngFor="let _ of skeletons" class="skeleton-card skeleton"></div>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="!loading && projects.length === 0 && !showCreateForm" class="empty-state">
+    <mat-icon>folder_open</mat-icon>
+    <h2>Aucun projet pour l'instant</h2>
+    <p>Créez votre premier projet pour commencer à organiser vos tâches.</p>
+    <button mat-flat-button color="primary" style="margin-top:16px;" (click)="showCreateForm = true">
+      <mat-icon>add</mat-icon> Créer un projet
+    </button>
+  </div>
+
+  <!-- Projects grid -->
+  <div *ngIf="!loading && projects.length > 0" class="projects-grid">
+    <div *ngFor="let project of projects" class="project-card mat-elevation-z0" [routerLink]="['/projects', project.id]">
+      <div class="card-accent" [style.background]="project.color"></div>
+      <div class="card-body">
+        <div class="project-name">{{ project.name }}</div>
+        <div class="project-desc">{{ project.description || 'Aucune description' }}</div>
+        <div class="stats">
+          <div class="stat">
+            <mat-icon>task_alt</mat-icon>
+            {{ project.completedTaskCount }}/{{ project.taskCount }} tâches
+          </div>
+          <div class="stat">
+            <mat-icon>group</mat-icon>
+            {{ project.members.length }} membre{{ project.members.length > 1 ? 's' : '' }}
+          </div>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="getProgress(project)"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- New project card -->
+    <div class="new-card mat-elevation-z0" (click)="showCreateForm = true">
+      <div class="new-card-inner">
+        <mat-icon>add_circle_outline</mat-icon>
+        <span>Nouveau projet</span>
+      </div>
+    </div>
+  </div>
+</div>

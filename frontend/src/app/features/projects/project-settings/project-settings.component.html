@@ -1,0 +1,93 @@
+<div class="settings-container">
+  <a class="back-link" [routerLink]="['/projects', projectId]">
+    <mat-icon style="font-size:16px;width:16px;height:16px;">arrow_back</mat-icon>
+    Retour au tableau
+  </a>
+
+  <mat-card *ngIf="!loading">
+    <mat-card-header>
+      <mat-card-title>Paramètres du projet</mat-card-title>
+    </mat-card-header>
+    <mat-card-content style="padding-top:16px;">
+      <form [formGroup]="form" (ngSubmit)="save()">
+        <mat-form-field appearance="outline">
+          <mat-label>Nom du projet</mat-label>
+          <input matInput formControlName="name">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="margin-top:12px;">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description" rows="3"></textarea>
+        </mat-form-field>
+
+        <div style="margin-top:12px;">
+          <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:8px;">Couleur du projet</p>
+          <div class="color-row">
+            <div *ngFor="let c of colors" class="color-dot"
+              [style.background]="c"
+              [style.outline]="form.get('color')?.value === c ? '2px solid white' : 'none'"
+              (click)="form.get('color')?.setValue(c)">
+            </div>
+          </div>
+        </div>
+
+        <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid" style="margin-top:20px;">
+          Enregistrer les modifications
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Members -->
+  <mat-card *ngIf="!loading">
+    <mat-card-header>
+      <mat-card-title>Membres ({{ project?.members?.length }})</mat-card-title>
+    </mat-card-header>
+    <mat-card-content style="padding-top:16px;">
+      <div *ngFor="let member of project?.members; let last = last">
+        <div class="member-item">
+          <div class="avatar">{{ getInitials(member.username) }}</div>
+          <div class="member-info">
+            <div class="member-name">
+              {{ member.username }}
+              <span *ngIf="member.id === project?.owner?.id" class="owner-badge">Owner</span>
+            </div>
+            <div class="member-email">{{ member.email }}</div>
+          </div>
+          <button mat-icon-button color="warn"
+            *ngIf="isOwner && member.id !== project?.owner?.id"
+            (click)="removeMember(member)"
+            matTooltip="Retirer du projet">
+            <mat-icon>person_remove</mat-icon>
+          </button>
+        </div>
+        <mat-divider *ngIf="!last"></mat-divider>
+      </div>
+
+      <div *ngIf="isOwner" style="display:flex;gap:12px;align-items:center;margin-top:20px;">
+        <mat-form-field appearance="outline" style="flex:1;margin-bottom:0;">
+          <mat-label>Email du nouveau membre</mat-label>
+          <input matInput type="email" [(ngModel)]="addMemberEmail" placeholder="alice@example.com">
+        </mat-form-field>
+        <button mat-flat-button color="accent" (click)="addMember()" [disabled]="!addMemberEmail.trim()">
+          <mat-icon>person_add</mat-icon> Inviter
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Danger zone -->
+  <mat-card *ngIf="!loading && isOwner" class="danger-zone">
+    <mat-card-header>
+      <mat-card-title>Zone de danger</mat-card-title>
+    </mat-card-header>
+    <mat-card-content style="padding-top:16px;">
+      <p style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:16px;">
+        La suppression du projet est irréversible. Toutes les tâches associées seront supprimées.
+      </p>
+      <button mat-stroked-button color="warn" (click)="deleteProject()">
+        <mat-icon>delete_forever</mat-icon> Supprimer le projet
+      </button>
+    </mat-card-content>
+  </mat-card>
+</div>

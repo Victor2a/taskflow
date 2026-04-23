@@ -1,0 +1,47 @@
+<div class="auth-container">
+  <mat-card class="auth-card">
+    <mat-card-content>
+      <div class="logo">⚡ TaskFlow</div>
+      <p class="subtitle">Créez votre compte gratuitement</p>
+
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <mat-form-field appearance="outline">
+          <mat-label>Nom d'utilisateur</mat-label>
+          <input matInput formControlName="username" placeholder="johndoe">
+          <mat-icon matPrefix style="color:var(--text-secondary)">person</mat-icon>
+          <mat-error *ngIf="form.get('username')?.hasError('required')">Nom requis</mat-error>
+          <mat-error *ngIf="form.get('username')?.hasError('minlength')">Minimum 3 caractères</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" formControlName="email" placeholder="john@example.com">
+          <mat-icon matPrefix style="color:var(--text-secondary)">email</mat-icon>
+          <mat-error *ngIf="form.get('email')?.hasError('required')">Email requis</mat-error>
+          <mat-error *ngIf="form.get('email')?.hasError('email')">Email invalide</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Mot de passe</mat-label>
+          <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
+          <mat-icon matPrefix style="color:var(--text-secondary)">lock</mat-icon>
+          <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
+            <mat-icon>{{ hidePassword ? 'visibility' : 'visibility_off' }}</mat-icon>
+          </button>
+          <mat-hint>Minimum 8 caractères</mat-hint>
+          <mat-error *ngIf="form.get('password')?.hasError('required')">Mot de passe requis</mat-error>
+          <mat-error *ngIf="form.get('password')?.hasError('minlength')">Minimum 8 caractères</mat-error>
+        </mat-form-field>
+
+        <button mat-flat-button color="primary" class="submit-btn" type="submit" [disabled]="loading || form.invalid" style="margin-top:20px">
+          <mat-spinner *ngIf="loading" diameter="20" style="display:inline-block;margin-right:8px"></mat-spinner>
+          Créer mon compte
+        </button>
+      </form>
+
+      <p class="footer">
+        Déjà un compte ? <a routerLink="/login">Se connecter</a>
+      </p>
+    </mat-card-content>
+  </mat-card>
+</div>
